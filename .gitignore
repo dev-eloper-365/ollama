@@ -1,0 +1,33 @@
+# ChromaDB data
+chroma_db/
+*.db
+*.sqlite
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Ollama data (if running locally)
+ollama_data/
+
+# Logs
+*.log
+

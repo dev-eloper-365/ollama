@@ -1,0 +1,21 @@
+[Unit]
+Description=Ollama Service
+After=network.target
+
+[Service]
+Type=simple
+User=%i
+ExecStart=/usr/bin/ollama serve
+Restart=always
+RestartSec=3
+Environment="OLLAMA_HOST=0.0.0.0:11434"
+
+# Optional: Set KV cache type for memory management
+# Environment="OLLAMA_KV_CACHE_TYPE=mmap"
+
+# Optional: Limit memory usage
+# MemoryMax=32G
+
+[Install]
+WantedBy=multi-user.target
+

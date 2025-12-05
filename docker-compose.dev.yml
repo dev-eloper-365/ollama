@@ -1,0 +1,14 @@
+# Development override file
+# Use with: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+services:
+  api:
+    volumes:
+      - ./api_server.py:/app/api_server.py
+      - ./ollama_chroma.py:/app/ollama_chroma.py
+      - ./bulk_ingest.py:/app/bulk_ingest.py
+      - chroma_data:/app/chroma_db
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+

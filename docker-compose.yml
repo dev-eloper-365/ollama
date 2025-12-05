@@ -1,0 +1,57 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    # Uncomment if you need GPU support (requires nvidia-docker)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ollama-api
+    ports:
+      - "8080:8080"
+    volumes:
+      - chroma_data:/app/chroma_db
+    environment:
+      - PORT=8080
+      - OLLAMA_URL=http://ollama:11434
+      - EMBED_MODEL=embeddinggemma
+      - CHROMA_PERSIST_DIR=/app/chroma_db
+    depends_on:
+      ollama:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  ollama_data:
+    driver: local
+  chroma_data:
+    driver: local
+
